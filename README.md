@@ -80,7 +80,7 @@ A modern web application for managing comments and discussions, built with Larav
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/comment-app.git
+git clone https://github.com/dmit9/laravel-commentApp-Vue.git
 cd comment-app
 ```
 
