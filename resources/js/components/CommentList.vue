@@ -119,6 +119,7 @@ const fetchComments = async (url = '/api/comments?page=1') => {
                 sortDirection: sortDirection.value
             }
         });
+
         comments.value = response.data;
     } catch (error) {
         console.error('Ошибка при получении комментариев:', error);
@@ -141,7 +142,11 @@ const toggleReplies = async (commentId) => {
     expandedComments.value[commentId] = true;
 
     try {
-        const response = await axios.get(`/api/comments/${commentId}/replies`);
+        const response = await axios.get(`/api/comments/${commentId}/replies`, {
+            params: {
+                page: this.currentRepliesPage
+            }
+        });
         currentReplies.value = response.data;
     } catch (error) {
         console.error('Ошибка при получении ответов:', error);

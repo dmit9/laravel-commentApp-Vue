@@ -102,7 +102,7 @@ const handleImageUpload = async (event) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
         form.value.errors.image = 'Допустимы только форматы JPG, PNG и GIF';
-        fileInput.value.value = ''; // Очищаем input
+        fileInput.value.value = ''; 
         imagePreview.value = '';
         return;
     }
@@ -220,7 +220,6 @@ const insertLink = () => {
         `<a href="${url}" title="Ссылка">${form.value.text.substring(start, end)}</a>` +
         form.value.text.substring(end);
 
-    // Переместить курсор после вставленной ссылки
     nextTick(() => {
         textarea.focus();
         textarea.setSelectionRange(end + url.length + 28, end + url.length + 28);
