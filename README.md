@@ -85,7 +85,7 @@
 
 1. Клонировать репозиторий:
 ```bash
-git clone https://github.com/your-username/comment-app.git
+git clone https://github.com/dmit9/laravel-commentApp-Vue.git
 cd comment-app
 ```
 
@@ -145,7 +145,7 @@ php artisan serve
 
 2. Клонируйте репозиторий на сервер:
 ```bash
-git clone https://github.com/your-username/comment-app.git
+git clone https://github.com/dmit9/laravel-commentApp-Vue.git
 cd comment-app
 ```
 
