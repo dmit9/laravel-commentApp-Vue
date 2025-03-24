@@ -142,12 +142,9 @@ const toggleReplies = async (commentId) => {
     expandedComments.value[commentId] = true;
 
     try {
-        const response = await axios.get(`/api/comments/${commentId}/replies`, {
-            params: {
-                page: this.currentRepliesPage
-            }
-        });
+        const response = await axios.get(`/api/comments/${commentId}/replies`);
         currentReplies.value = response.data;
+
     } catch (error) {
         console.error('Ошибка при получении ответов:', error);
     }
