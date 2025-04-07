@@ -1,116 +1,119 @@
-# Система комментариев
+# Comment Application
 
-Веб-приложение для управления комментариями с поддержкой древовидной структуры ответов.
+A modern web application for managing comments and discussions, built with Laravel and Vue.js.
 
-## Основные возможности
+## Features
 
-### Комментарии и ответы
-- Создание новых комментариев
-- Ответы на существующие комментарии
-- Древовидная структура ответов с визуальным отступом
-- Поддержка изображений в комментариях
-- Форматирование текста с помощью тегов [i], [strong], [code], [a]
+### Comments and Replies
+- Create and manage comments
+- Support for nested replies (threaded comments)
+- Pagination for both comments and replies
+- Real-time updates without page reload
+- Image upload support for comments
+- XSS protection and HTML sanitization
 
-### Пользователи
-- Автоматическая регистрация пользователей при создании комментария
-- Привязка комментариев к пользователям
-- Возможность указать домашнюю страницу
-- Аватары для пользователей
+### User Management
+- User registration with unique names and emails
+- Optional homepage links for users
+- Automatic user creation when posting comments
+- User data validation and duplicate prevention
 
-### Сортировка и навигация
-- Сортировка комментариев по:
-  - Имени пользователя
-  - Email
-  - Дате добавления
-- Постраничная навигация (пагинация) для комментариев и ответов
-- Возможность сворачивать/разворачивать ветки ответов
+### Sorting and Navigation
+- Sort comments by date (newest/oldest)
+- Dynamic loading of replies
+- Smooth scrolling to new comments
+- Responsive design for all devices
 
-### Безопасность
-- Защита от XSS-атак
-- Валидация пользовательского ввода
-- Защита от спама с помощью капчи
-- Проверка уникальности имен пользователей
+### Security Features
+- CSRF protection
+- Input validation and sanitization
+- XSS prevention
+- Secure file upload handling
+- Rate limiting for comment creation
 
-### Интерфейс
-- Адаптивный дизайн
-- Плавные анимации при взаимодействии
-- Визуальная обратная связь (hover-эффекты)
-- Удобная навигация по древовидной структуре
+### User Interface
+- Modern and clean design
+- Responsive layout
+- Loading states and animations
+- Error handling and user feedback
+- Avatar support for users
 
-## Технический стек
+## Technical Stack
 
 ### Frontend
-- Vue.js 3
-- Composition API
-- Axios для HTTP-запросов
-- CSS с использованием Flexbox
+- Vue.js 3 with Composition API
+- Tailwind CSS for styling
+- Axios for API requests
+- Alpine.js for enhanced interactivity
+- Laravel Mix for asset compilation
 
 ### Backend
-- Laravel
-- MySQL
-- RESTful API
-- Eloquent ORM
+- Laravel 10.x
+- MySQL database
+- Laravel Sanctum for API authentication
+- Laravel's built-in security features
 
-## Структура базы данных
+Message Queue Integration
+Receiving External Comments via RabbitMQ
+The application receives comments from an external website — https://abz.prototypecodetest.site/ — using RabbitMQ and WebSocket integration.
 
-### Таблица users
-- ID пользователя
-- Имя (уникальное)
-- Email
-- Домашняя страница (опционально)
-- Метки времени создания и обновления
+A custom Artisan command RabbitConsumeComments listens for incoming messages via a WebSocket-connected RabbitMQ queue.
 
-### Таблица comments
-- ID комментария
-- ID пользователя (внешний ключ)
-- ID родительского комментария (для ответов)
-- Текст комментария
-- Путь к изображению (опционально)
-- Метки времени создания и обновления
+Received comment data is processed by the RabbitReserveCommentService, which handles validation and transformation.
 
-### Таблица captchas
-- ID капчи
-- Токен
-- Текст
-- Метки времени создания и обновления
+After processing, the comment is stored in the local database alongside regular user-submitted comments.
 
-## Требования к установке
+This real-time background process ensures smooth ingestion of external comment streams and is designed for stable continuous operation.
 
-1. PHP 8.0 или выше
-2. MySQL 5.7 или выше
-3. Composer
-4. Node.js и npm
+## Database Structure
 
-## Установка и настройка
+### Users Table
+- `id` - Primary key
+- `name` - Unique username
+- `email` - Unique email address
+- `homepage` - Optional user website
+- `created_at` and `updated_at` timestamps
 
-1. Клонировать репозиторий:
+### Comments Table
+- `id` - Primary key
+- `user_id` - Foreign key to users
+- `parent_id` - For nested comments
+- `text` - Comment content
+- `image_path` - Optional image attachment
+- `created_at` and `updated_at` timestamps
+
+### Captchas Table
+- `id` - Primary key
+- `token` - Unique captcha token
+- `text` - Captcha text
+- `created_at` and `updated_at` timestamps
+
+## Installation
+
+1. Clone the repository:
 ```bash
 git clone https://github.com/dmit9/laravel-commentApp-Vue.git
 cd comment-app
 ```
 
-2. Установить PHP-зависимости:
+2. Install PHP dependencies:
 ```bash
 composer install
 ```
 
-3. Установить JavaScript-зависимости:
+3. Install Node.js dependencies:
 ```bash
 npm install
 ```
 
-4. Скопировать файл конфигурации:
+4. Create environment file:
 ```bash
 cp .env.example .env
-```
-
-5. Сгенерировать ключ приложения:
-```bash
 php artisan key:generate
 ```
 
-6. Настроить подключение к базе данных в файле `.env`:
-```env
+5. Configure your database in `.env`:
+```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -119,85 +122,76 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-7. Выполнить миграции:
+6. Run migrations:
 ```bash
 php artisan migrate
 ```
 
-8. Создать символическую ссылку для хранения файлов:
-```bash
-php artisan storage:link
-```
-
-9. Собрать фронтенд:
+7. Build frontend assets:
 ```bash
 npm run build
 ```
 
-10. Запустить сервер разработки:
+8. Start the development server:
 ```bash
 php artisan serve
 ```
 
-## Развертывание на сервере
+## Usage Guide
 
-1. Убедитесь, что на сервере установлены все необходимые зависимости (PHP, MySQL, Composer, Node.js)
+### Creating a Comment
+1. Fill in the comment form at the top of the page
+2. Enter your name and email (required)
+3. Optionally add your homepage URL
+4. Write your comment text
+5. Optionally attach an image
+6. Click "Submit"
 
-2. Клонируйте репозиторий на сервер:
+### Replying to Comments
+1. Click the "Reply" button on any comment
+2. Fill in the reply form that appears
+3. Enter your details if you haven't before
+4. Write your reply
+5. Click "Submit"
+
+### Managing Comments
+- Use the sort buttons to change comment order
+- Click "Load More" to see additional replies
+- Images in comments are displayed in a modal view
+- Use the pagination controls to navigate through pages
+
+### Security Notes
+- All user inputs are sanitized
+- File uploads are validated and secured
+- Rate limiting prevents spam
+- CSRF protection is enabled
+- XSS attacks are prevented
+
+## Development
+
+### Frontend Development
 ```bash
-git clone https://github.com/dmit9/laravel-commentApp-Vue.git
-cd comment-app
+npm run dev
 ```
 
-3. Установите зависимости:
+### Backend Development
 ```bash
-composer install --no-dev
-npm install
-npm run build
+php artisan serve
 ```
 
-4. Настройте веб-сервер (Apache/Nginx) для работы с Laravel
-
-5. Настройте права доступа:
+### Running Tests
 ```bash
-chmod -R 775 storage bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache
+php artisan test
 ```
 
-6. Настройте переменные окружения в файле `.env`
+## Contributing
 
-7. Выполните миграции:
-```bash
-php artisan migrate
-```
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-8. Создайте символическую ссылку для хранения файлов:
-```bash
-php artisan storage:link
-```
+## License
 
-## Использование
-
-1. Создание комментария:
-   - Нажать кнопку "Написать комментарий"
-   - Заполнить форму (имя, email, текст)
-   - При желании добавить изображение
-   - Ввести капчу
-   - Отправить комментарий
-
-2. Ответ на комментарий:
-   - Нажать кнопку "Ответить" под нужным комментарием
-   - Заполнить форму
-   - Отправить ответ
-
-3. Просмотр ответов:
-   - Нажать "Развернуть ответы" для просмотра ветки ответов
-   - Использовать пагинацию для навигации по ответам
-
-4. Сортировка:
-   - Использовать кнопки сортировки в шапке таблицы
-   - Повторное нажатие меняет направление сортировки
-
-## Лицензия
-
-MIT
+This project is licensed under the MIT License - see the LICENSE file for details.
