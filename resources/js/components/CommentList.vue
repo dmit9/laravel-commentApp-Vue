@@ -1,24 +1,30 @@
 <template>
     <div class="container">
-        <h2>Заглавные комментарии</h2>
+        <h2>Headline comments</h2>
+	<p>Sourse code <a href='https://github.com/dmit9/laravel-commentApp-Vue' target="_blank">github.com/dmit9/laravel-commentApp-Vue</a></p>
         <div class="header-btn">
             <div>
-                <button @click="sortComments('user_name')">Имя пользователя</button>
-                <button @click="sortComments('email')">E-mail</button>
-                <button @click="sortComments('created_at')">Дата добавления</button>
+                <button @click="sortComments('user_name')" >Name
+                    {{ sortField === 'user_name' ? (sortDirection === 'asc' ? '⬆️' : '⬇️') : '' }}</button>
+                <button @click="sortComments('email')">E-mail
+                    {{ sortField === 'email' ? (sortDirection === 'asc' ? '⬆️' : '⬇️') : '' }}
+                </button>
+                <button @click="sortComments('created_at')">Date
+                    {{ sortField === 'created_at' ? (sortDirection === 'asc' ? '⬆️' : '⬇️') : '' }}
+                </button>
             </div>
             <div>
-                <button @click="showCreatePostForm">Написать комментарий</button>
+                <button @click="showCreatePostForm">Add comments</button>
             </div>
         </div>
         <table>
             <thead>
             <tr>
-                <th>Имя</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Дата</th>
-                <th>Комментарий</th>
-                <th>Действие</th>
+                <th>Date</th>
+                <th>Comment</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -32,9 +38,9 @@
                     <td>{{ formatDate(comment.created_at) }}</td>
                     <td>{{ comment.text }}</td>
                     <td>
-                        <button @click="replyToComment(comment.id)">Ответить</button>
+                        <button @click="replyToComment(comment.id)">Reply</button>
                         <button @click="toggleReplies(comment.id, '')">
-                            {{ expandedComments[comment.id] ? 'Скрыть ответы' : 'Развернуть ответы' }}
+                            {{ expandedComments[comment.id] ? 'Hide answers' : 'Expand' }}
                         </button>
                     </td>
                 </tr>
@@ -52,7 +58,7 @@
                                     </div>
                                     <div><strong>{{ reply.user.name }}</strong></div>
                                     <div>{{ formatDate(reply.created_at) }}</div>
-                                    <button @click="replyToComment(comment.id)" class="reply-btn">Ответить</button>
+                                    <button @click="replyToComment(comment.id)" class="reply-btn">Reply</button>
                                 </div>
                                 <p>{{ reply.text }}</p>
                             </div>
@@ -60,12 +66,12 @@
                                 <button
                                     @click="loadRepliesPage(currentReplies.prev_page_url)"
                                     :disabled="!currentReplies.prev_page_url">
-                                    Назад
+                                    Back
                                 </button>
                                 <button
                                     @click="loadRepliesPage(currentReplies.next_page_url)"
                                     :disabled="!currentReplies.next_page_url">
-                                    Вперед
+                                    Forward
                                 </button>
                             </div>
                         </div>
@@ -79,12 +85,12 @@
             <button
                 @click="fetchComments(comments.prev_page_url)"
                 :disabled="!comments.prev_page_url">
-                Назад
+                Back
             </button>
             <button
                 @click="fetchComments(comments.next_page_url)"
                 :disabled="!comments.next_page_url">
-                Вперед
+                Forward
             </button>
         </div>
         <CommentForm 
@@ -98,7 +104,7 @@
 </template>
 <script setup>
 import {onMounted, ref, nextTick} from 'vue';
-import axios from 'axios';
+import axios from '../axios';
 import CommentForm from "./CommentForm.vue";
 
 const comments = ref({data: [],});
@@ -121,7 +127,7 @@ const fetchComments = async (url = '/api/comments?page=1') => {
         });
         comments.value = response.data;
     } catch (error) {
-        console.error('Ошибка при получении комментариев:', error);
+        console.error('Error while retrieving comments:', error);
     }
 };
 const toggleReplies = async (commentId) => {
@@ -144,7 +150,7 @@ const toggleReplies = async (commentId) => {
         const response = await axios.get(`/api/comments/${commentId}/replies`);
         currentReplies.value = response.data;
     } catch (error) {
-        console.error('Ошибка при получении ответов:', error);
+        console.error('Error while receiving responses:', error);
     }
 };
 const loadRepliesPage = async (url) => {
@@ -153,7 +159,7 @@ const loadRepliesPage = async (url) => {
         const response = await axios.get(url);
         currentReplies.value = response.data;
     } catch (error) {
-        console.error('Ошибка при загрузке страницы ответов:', error);
+        console.error('Error while receiving responses:', error);
     }
 };
 const showCreatePostForm = () => {
@@ -292,6 +298,7 @@ th {
 
 button {
     cursor: pointer;
+    height: 25px;
 }
 
 .header-btn{

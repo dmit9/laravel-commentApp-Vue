@@ -1,0 +1,40 @@
+2025-04-06 04:36:09,275 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-04-06 04:36:09,391 INFO Included extra file "/etc/supervisor/supervisor-websocket.conf" during parsing
+2025-04-06 04:36:09,392 INFO Included extra file "/etc/supervisor/supervisord.conf" during parsing
+2025-04-06 04:36:09,419 INFO supervisord started with pid 1
+2025-04-06 04:36:10,518 INFO spawned: 'websocket-consumer' with pid 6
+2025-04-06 04:36:11,525 INFO success: websocket-consumer entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-06 04:38:55,747 WARN received SIGQUIT indicating exit request
+2025-04-06 04:38:55,751 INFO waiting for websocket-consumer to die
+2025-04-06 04:38:55,768 WARN stopped: websocket-consumer (terminated by SIGTERM)
+2025-04-06 04:39:31,863 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-04-06 04:39:31,863 INFO Included extra file "/etc/supervisor/supervisor-websocket.conf" during parsing
+2025-04-06 04:39:31,863 INFO Included extra file "/etc/supervisor/supervisord.conf" during parsing
+2025-04-06 04:39:31,874 INFO supervisord started with pid 1
+2025-04-06 04:39:32,884 INFO spawned: 'websocket-consumer' with pid 8
+2025-04-06 04:39:33,890 INFO success: websocket-consumer entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-06 04:41:27,046 WARN received SIGQUIT indicating exit request
+2025-04-06 04:41:27,061 INFO waiting for websocket-consumer to die
+2025-04-06 04:41:27,076 WARN stopped: websocket-consumer (terminated by SIGTERM)
+2025-04-06 04:42:04,216 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-04-06 04:42:04,252 INFO Included extra file "/etc/supervisor/supervisor-websocket.conf" during parsing
+2025-04-06 04:42:04,254 INFO Included extra file "/etc/supervisor/supervisord.conf" during parsing
+2025-04-06 04:42:04,262 INFO supervisord started with pid 1
+2025-04-06 04:42:05,268 INFO spawned: 'websocket-consumer' with pid 8
+2025-04-06 04:42:06,272 INFO success: websocket-consumer entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-06 04:43:46,409 WARN received SIGQUIT indicating exit request
+2025-04-06 04:43:46,414 INFO waiting for websocket-consumer to die
+2025-04-06 04:43:46,429 WARN stopped: websocket-consumer (terminated by SIGTERM)
+2025-04-06 05:41:02,409 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-04-06 05:41:02,410 INFO Included extra file "/etc/supervisor/supervisor-websocket.conf" during parsing
+2025-04-06 05:41:02,410 INFO Included extra file "/etc/supervisor/supervisord.conf" during parsing
+2025-04-06 05:41:02,424 INFO supervisord started with pid 1
+2025-04-06 05:41:03,433 INFO spawned: 'websocket-consumer' with pid 6
+2025-04-06 05:41:04,437 INFO success: websocket-consumer entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-04-06 05:45:45,815 WARN received SIGQUIT indicating exit request
+2025-04-06 05:45:45,817 INFO waiting for websocket-consumer to die
+2025-04-06 05:45:45,826 WARN stopped: websocket-consumer (terminated by SIGTERM)
+2025-04-06 05:52:16,980 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-04-06 05:52:16,982 INFO Included extra file "/etc/supervisor/supervisord.conf" during parsing
+2025-04-06 05:52:16,985 INFO supervisord started with pid 1
+2025-04-06 06:04:49,991 WARN received SIGQUIT indicating exit request

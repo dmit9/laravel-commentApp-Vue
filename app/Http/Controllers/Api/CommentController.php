@@ -43,9 +43,9 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'regex:/^[a-zA-Z0-9]+$/'],
+            'name' => ['required', 'string','min:2','max:60', 'regex:/^[a-zA-Z0-9]+$/'],
             'email' => ['required', 'email'],
-            'text' => ['required', 'string'],
+            'text' => ['required', 'string','min:2','max:300'],
             'homepage' => ['nullable', 'url'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,gif', 'max:2048'],
             'captcha' => ['required', function ($attribute, $value, $fail) use ($request) {
@@ -91,8 +91,8 @@ class CommentController extends Controller
             'image' => ['nullable', 'image', 'mimes:jpeg,png,gif', 'max:2048'],
             'captcha' => ['required', function ($attribute, $value, $fail) use ($request) {
                 if (!$this->commentService->validateCaptcha($request->header('X-Captcha-Token'), $value)) {
-                    $fail('Неверная капча.');
-                    Log::info("Токен капчи CommentController: " . $request->header('X-Captcha-Token'));
+                    $fail('Invalid captcha.');
+    //                Log::info("Токен капчи CommentController: " . $request->header('X-Captcha-Token'));
                 }
             }],
         ]);

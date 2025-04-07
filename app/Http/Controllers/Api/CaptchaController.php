@@ -30,8 +30,8 @@ class CaptchaController extends Controller
             'text' => $captchaText,
             'expires_at' => now()->addMinutes(5),
         ]);
-        Log::info("Капча сохранена text: " . $captchaText);
-        Log::info("Токен капчи CaptchaController: " . $token);
+    //    Log::info("Капча сохранена text: " . $captchaText);
+    //    Log::info("Токен капчи CaptchaController: " . $token);
         $img->text($captchaText, 75, 25, $font);
         $encoder = new PngEncoder();
         return response($img->encode($encoder))

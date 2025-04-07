@@ -4,7 +4,7 @@
         <input
             type="text"
             v-model="localCaptchaInput"
-            placeholder="Введите код"
+            placeholder="Enter the code"
             required
             @input="updateCaptcha"
         >
@@ -44,7 +44,7 @@ const refreshCaptcha = async () => {
         console.log(captchaToken.value)
         isCaptchaLoaded.value = true;
     } catch (error) {
-        console.error('Ошибка загрузки капчи:', error);
+        console.error('Error loading captcha:', error);
     }
 };
 const resetCaptcha = () => {

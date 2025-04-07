@@ -36,30 +36,31 @@ class CommentService
         }
 
         try {
-            // Проверяем существование пользователя по email или имени
-            $userByEmail = User::where('email', $request->email)->first();
-            $userByName = User::where('name', $request->name)->first();
-            
+            $users = User::where('email', $request->email)
+             ->orWhere('name', $request->name)
+             ->get();
+
+        if ($users->count()) {
+            $userByEmail = $users->firstWhere('email', $request->email);
+            $userByName = $users->firstWhere('name', $request->name);
+
             if ($userByEmail && $userByName) {
-                // Если найдены оба, они должны указывать на одного и того же пользователя
                 if ($userByEmail->id !== $userByName->id) {
-                    throw new \Exception('Это имя уже используется другим пользователем');
+                    throw new \Exception('This name is already in use by another user.');
                 }
                 $user = $userByEmail;
             } elseif ($userByEmail) {
-                // Если найден только по email, но имя другое
-                throw new \Exception('Этот email уже зарегистрирован с другим именем пользователя');
+                throw new \Exception('This email is already registered with another username.');
             } elseif ($userByName) {
-                // Если найден только по имени, но email другой
-                throw new \Exception('Это имя уже используется другим пользователем');
-            } else {
-                // Создаем нового пользователя, так как не найден ни по email, ни по имени
-                $user = User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'homepage' => $request->homepage ?? null
-                ]);
+                throw new \Exception('This name is already in use by another user.');
             }
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'homepage' => $request->homepage ?? null
+            ]);
+        }
 
             // Обновляем homepage, если он изменился
             if ($user->homepage !== $request->homepage) {

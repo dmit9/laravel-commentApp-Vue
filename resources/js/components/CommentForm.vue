@@ -5,17 +5,17 @@
         <input
             type="text"
             v-model="form.name"
-            placeholder="Ваше имя"
+            placeholder="Your name"
             required
             pattern="^[a-zA-Z0-9]+$"
-            title="Только латинские буквы и цифры"
+            title="Only Latin letters and numbers"
         />
         <div v-if="form.errors.name" class="error-message">{{ form.errors.name }}</div>
 
         <input
             type="email"
             v-model="form.email"
-            placeholder="Ваш email"
+            placeholder="Your email"
             required
         />
         <div v-if="form.errors.email" class="error-message">{{ form.errors.email }}</div>
@@ -23,7 +23,7 @@
         <input
             type="url"
             v-model="form.homepage"
-            placeholder="Ваш сайт (необязательно)"
+            placeholder="Your website (optional)"
         />
         <div v-if="form.errors.homepage" class="error-message">{{ form.errors.homepage }}</div>
 
@@ -35,7 +35,7 @@
                 ref="fileInput"
             />
             <div class="image-requirements">
-                Допустимые форматы: JPG, GIF, PNG. Максимальный размер: 320x240
+                Accepted formats: JPG, GIF, PNG. Maximum size: 320x240
             </div>
             <div v-if="form.errors.image" class="error-message">{{ form.errors.image }}</div>
             <img v-if="imagePreview" :src="imagePreview" class="image-preview" />
@@ -50,7 +50,7 @@
 
         <textarea
             v-model="form.text"
-            :placeholder="props.commenId ? 'Текст комментария' : 'Текст поста'"
+            :placeholder="props.commenId ? 'Comment text' : 'Post text'"
             required
         ></textarea>
         <div v-if="form.errors.text" class="error-message">{{ form.errors.text }}</div>
@@ -58,8 +58,8 @@
         <Captcha ref="captchaRef" v-model="form.captcha" />
         <div v-if="form.errors.captcha" class="error-message">{{ form.errors.captcha }}</div>
 
-        <button type="submit">{{ props.commenId ? 'Отправить' : 'Создать пост' }}</button>
-        <button @click="closeForm()">Закрыть</button>
+        <button type="submit">{{ props.commenId ? 'Send' : 'Create post' }}</button>
+        <button @click="closeForm()">Close</button>
     </form>
 </template>
 <script setup>
@@ -101,7 +101,7 @@ const handleImageUpload = async (event) => {
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
-        form.value.errors.image = 'Допустимы только форматы JPG, PNG и GIF';
+        form.value.errors.image = 'Only JPG, PNG and GIF formats are accepted';
         fileInput.value.value = ''; // Очищаем input
         imagePreview.value = '';
         return;
@@ -182,7 +182,7 @@ const submitComment = async () => {
             });
         } else {
             console.error(error);
-            alert(props.commenId ? 'Ошибка отправки комментария.' : 'Ошибка создания поста.');
+            alert(props.commenId ? 'Error sending comment.' : 'Error creating post.');
         }
     }
 };
