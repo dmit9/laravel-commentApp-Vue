@@ -13,6 +13,10 @@
                     {{ sortField === 'created_at' ? (sortDirection === 'asc' ? '⬆️' : '⬇️') : '' }}
                 </button>
             </div>
+            <div class="search-field">
+                <input v-model.trim="searchField" placeholder="search text"/>
+                <p>total: {{ comments.total }}</p>
+            </div>
             <div>
                 <button @click="showCreatePostForm">Add comments</button>
             </div>
@@ -103,7 +107,7 @@
     </div>
 </template>
 <script setup>
-import {onMounted, ref, nextTick} from 'vue';
+import {onMounted, ref, nextTick, watch} from 'vue';
 import axios from '../axios';
 import CommentForm from "./CommentForm.vue";
 
@@ -111,6 +115,7 @@ const comments = ref({data: [],});
 const currentReplies = ref({data: [], links: {}});
 const sortField = ref('created_at');
 const sortDirection = ref('desc');
+const searchField = ref('');
 const isCommentFormVisible = ref(false);
 const commenId = ref(null);
 const expandedComments = ref({});
@@ -121,6 +126,7 @@ const fetchComments = async (url = '/api/comments?page=1') => {
     try {
         const response = await axios.get(url, {
             params: {
+                searchField: searchField.value,
                 sortField: sortField.value,
                 sortDirection: sortDirection.value
             }
@@ -130,6 +136,11 @@ const fetchComments = async (url = '/api/comments?page=1') => {
         console.error('Error while retrieving comments:', error);
     }
 };
+
+watch(searchField, () => {
+    fetchComments();
+})
+
 const toggleReplies = async (commentId) => {
     closeForm()
     if (activeCommentId.value === commentId) {
@@ -210,6 +221,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
+html {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-width: 380px;
+    overflow-x: hidden;
+}
 .container{
     max-width: 1200px;
     margin: 20px auto ;
@@ -217,6 +237,9 @@ onMounted(() => {
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 th, td {
@@ -306,5 +329,12 @@ button {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.search-field {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 25px;
 }
 </style>

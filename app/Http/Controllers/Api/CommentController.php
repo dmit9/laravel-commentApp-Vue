@@ -24,6 +24,10 @@ class CommentController extends Controller
         $sortOrder = $request->input('sortDirection', 'desc');
         $query = Comment::with('user')->whereNull('parent_id');
 
+        $searchField = $request->query('searchField', '');
+        $searchField = preg_replace("#([%_?+])#", "\\$1", $searchField);
+        $query->where('text', 'LIKE', '%' . $searchField . '%');
+
         if ($sortField === 'user_name') {
             $query->join('users', 'comments.user_id', '=', 'users.id')
                 ->orderBy('users.name', $sortOrder)
@@ -35,7 +39,8 @@ class CommentController extends Controller
         } elseif (in_array($sortField, ['created_at'])) {
             $query->orderBy($sortField, $sortOrder);
         }
-        $comments = $query->paginate(25);
+    //    $comments = $query->paginate(25);
+        $comments = $query->where('text', 'LIKE', '%' . $searchField . '%')->paginate(10);
 
         return response()->json($comments);
     }
@@ -123,7 +128,7 @@ class CommentController extends Controller
         $query = Comment::where('parent_id', $id)
             ->with('user');
 
-        $replies = $query->paginate(25);
+        $replies = $query->paginate(10);
         return response()->json($replies);
     }
 }
