@@ -14,7 +14,7 @@
                 </button>
             </div>
             <div class="search-field">
-                <input v-model.trim="searchField" placeholder="search text"/>
+                <input v-model.trim="searchField" placeholder="search name,email,text,date" type="search"/>
                 <p>total: {{ comments.total }}</p>
             </div>
             <div>
@@ -322,6 +322,10 @@ th {
 button {
     cursor: pointer;
     height: 25px;
+}
+
+input {
+    width: 150%;
 }
 
 .header-btn{

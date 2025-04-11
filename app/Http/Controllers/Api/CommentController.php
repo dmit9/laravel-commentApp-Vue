@@ -26,7 +26,17 @@ class CommentController extends Controller
 
         $searchField = $request->query('searchField', '');
         $searchField = preg_replace("#([%_?+])#", "\\$1", $searchField);
-        $query->where('text', 'LIKE', '%' . $searchField . '%');
+
+        if (!empty($searchField)) {
+            $query->where(function ($q) use ($searchField) {
+                $q->where('text', 'LIKE', '%' . $searchField . '%')
+                    ->orWhereHas('user', function ($qUser) use ($searchField) {
+                        $qUser->where('name', 'LIKE', '%' . $searchField . '%')
+                            ->orWhere('created_at', 'LIKE', '%' . $searchField . '%')
+                            ->orWhere('email', 'LIKE', '%' . $searchField . '%');
+                    });
+            });
+        }
 
         if ($sortField === 'user_name') {
             $query->join('users', 'comments.user_id', '=', 'users.id')
@@ -39,8 +49,7 @@ class CommentController extends Controller
         } elseif (in_array($sortField, ['created_at'])) {
             $query->orderBy($sortField, $sortOrder);
         }
-    //    $comments = $query->paginate(25);
-        $comments = $query->where('text', 'LIKE', '%' . $searchField . '%')->paginate(10);
+        $comments = $query->paginate(10);
 
         return response()->json($comments);
     }
