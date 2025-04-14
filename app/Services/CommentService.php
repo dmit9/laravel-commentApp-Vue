@@ -8,6 +8,7 @@ use App\Models\Captcha;
 use Illuminate\Http\Request;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Support\Facades\Cache;
 
 class CommentService
 {
@@ -75,6 +76,8 @@ class CommentService
                 'image_path' => $imagePath,
                 'parent_id' => $parentId
             ]);
+
+            Cache::flush();
 
             return [
                 'comment' => $comment,

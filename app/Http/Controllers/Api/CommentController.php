@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Services\CommentService;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller
 {
@@ -22,37 +23,44 @@ class CommentController extends Controller
     {
         $sortField = $request->input('sortField', 'created_at');
         $sortOrder = $request->input('sortDirection', 'desc');
-        $query = Comment::with('user')->whereNull('parent_id');
-
         $searchField = $request->query('searchField', '');
+        $page = $request->input('page', 1);
+
         $searchField = preg_replace("#([%_?+])#", "\\$1", $searchField);
+        $cacheKey = "comments_index:{$sortField}:{$sortOrder}:{$searchField}:page:{$page}";
+        $comments = Cache::rememberForever($cacheKey,  function () use (
+            $sortField, $sortOrder, $searchField
+        ) {
+            $query = Comment::with('user')->whereNull('parent_id');
 
-        if (!empty($searchField)) {
-            $query->where(function ($q) use ($searchField) {
-                $q->where('text', 'LIKE', '%' . $searchField . '%')
-                    ->orWhereHas('user', function ($qUser) use ($searchField) {
-                        $qUser->where('name', 'LIKE', '%' . $searchField . '%')
-                            ->orWhere('created_at', 'LIKE', '%' . $searchField . '%')
-                            ->orWhere('email', 'LIKE', '%' . $searchField . '%');
-                    });
-            });
-        }
+            if (!empty($searchField)) {
+                $query->where(function ($q) use ($searchField) {
+                    $q->where('text', 'LIKE', '%' . $searchField . '%')
+                        ->orWhereHas('user', function ($qUser) use ($searchField) {
+                            $qUser->where('name', 'LIKE', '%' . $searchField . '%')
+                                ->orWhere('email', 'LIKE', '%' . $searchField . '%')
+                                ->orWhere('created_at', 'LIKE', '%' . $searchField . '%');
+                        });
+                });
+            }
 
-        if ($sortField === 'user_name') {
-            $query->join('users', 'comments.user_id', '=', 'users.id')
-                ->orderBy('users.name', $sortOrder)
-                ->select('comments.*');
-        } elseif ($sortField === 'email') {
-            $query->join('users', 'comments.user_id', '=', 'users.id')
-                ->orderBy('users.email', $sortOrder)
-                ->select('comments.*');
-        } elseif (in_array($sortField, ['created_at'])) {
-            $query->orderBy($sortField, $sortOrder);
-        }
-        $comments = $query->paginate(10);
+            if ($sortField === 'user_name') {
+                $query->join('users', 'comments.user_id', '=', 'users.id')
+                    ->orderBy('users.name', $sortOrder)
+                    ->select('comments.*');
+            } elseif ($sortField === 'email') {
+                $query->join('users', 'comments.user_id', '=', 'users.id')
+                    ->orderBy('users.email', $sortOrder)
+                    ->select('comments.*');
+            } elseif (in_array($sortField, ['created_at'])) {
+                $query->orderBy($sortField, $sortOrder);
+            }
 
+            return $query->paginate(15);
+        });
         return response()->json($comments);
     }
+
 
     public function store(Request $request)
     {
@@ -134,10 +142,19 @@ class CommentController extends Controller
 
     public function replies(Request $request, $id)
     {
-        $query = Comment::where('parent_id', $id)
-            ->with('user');
+        // $query = Comment::where('parent_id', $id)
+        //     ->with('user');
 
-        $replies = $query->paginate(10);
+        // $replies = $query->paginate(10);
+        $page = $request->input('page', 1);
+        $cacheKey = "replies:{$id}:page:{$page}";
+
+        $replies = Cache::rememberForever($cacheKey, function () use ($id) {
+            return Comment::where('parent_id', $id)
+                ->with('user')
+                ->paginate(10);
+        });
+        
         return response()->json($replies);
     }
 }

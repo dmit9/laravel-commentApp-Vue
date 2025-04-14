@@ -15,7 +15,23 @@
             </div>
             <div class="search-field">
                 <input v-model.trim="searchField" placeholder="search name,email,text,date" type="search"/>
-                <p>total: {{ comments.total }}</p>
+            </div>
+            <div>
+                total: {{ comments.total }}
+            </div>
+        </div>
+        <div  class="header-btn">
+            <div v-if="comments.links && comments.last_page > 1" class="pagination">
+                <button
+                    @click="fetchComments(comments.prev_page_url)"
+                    :disabled="!comments.prev_page_url">
+                    Back
+                </button>
+                <button
+                    @click="fetchComments(comments.next_page_url)"
+                    :disabled="!comments.next_page_url">
+                    Forward
+                </button>
             </div>
             <div>
                 <button @click="showCreatePostForm">Add comments</button>
@@ -85,18 +101,6 @@
             </tbody>
         </table>
 
-        <div v-if="comments.links && comments.last_page > 1" class="pagination">
-            <button
-                @click="fetchComments(comments.prev_page_url)"
-                :disabled="!comments.prev_page_url">
-                Back
-            </button>
-            <button
-                @click="fetchComments(comments.next_page_url)"
-                :disabled="!comments.next_page_url">
-                Forward
-            </button>
-        </div>
         <CommentForm 
             v-if="isCommentFormVisible"
             :commenId="commenId" 
@@ -262,10 +266,6 @@ th {
 
 .avatar:hover {
     border-color: #dc3545;
-}
-
-.pagination {
-    margin-top: 20px;
 }
 
 .pagination button {

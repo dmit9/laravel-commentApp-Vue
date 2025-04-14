@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use HTMLPurifier;
 use HTMLPurifier_Config;
+use Illuminate\Support\Facades\Cache;
 
 class RabbitReserveCommentServices
 {
@@ -76,7 +77,8 @@ class RabbitReserveCommentServices
             'image_path' => $filePath ,
             'parent_id' => null
         ]);
-        dump("comment  ".$user->id);
+
+        Cache::flush();
 
         return [
             'comment' => $comment,
